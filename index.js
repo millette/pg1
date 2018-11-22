@@ -24,8 +24,11 @@ const front = async (ctx) => {
   const n = Date.now()
   const res = await visitorPool.query("SELECT * from table1")
   ctx.type = "text/html"
-  ctx.body = `${JSON.stringify(res.rows)} - ${Date.now() -
-    n}; <a href='/login'>login</a>`
+  ctx.body = `
+    ${JSON.stringify(res.rows)} -
+    ${Date.now() - n};
+    <a href='/login'>login</a>
+  `
 }
 
 const app = new Koa()
