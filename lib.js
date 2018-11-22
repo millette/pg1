@@ -42,4 +42,34 @@ const login = (ctx) => {
   ctx.body = `Method ${ctx.method} not supported.`
 }
 
-module.exports = { login }
+const front = async (ctx) => {
+  ctx.type = "text/html"
+  switch (ctx.path) {
+    case "/index":
+    case "/index/":
+      ctx.status = 301
+      ctx.redirect("/")
+      break
+
+    case "/":
+      try {
+        const n = Date.now()
+
+        const res = await ctx.visitorPool.query("SELECT * from table1")
+        ctx.body = `
+          ${JSON.stringify(res.rows)} -
+          ${Date.now() - n};
+          <a href='/login'>login</a>
+        `
+      } catch (e) {
+        ctx.body = e.toString()
+      }
+      break
+
+    default:
+      ctx.status = 404
+      ctx.body = "Not found. <a href='/login'>login</a>"
+  }
+}
+
+module.exports = { login, front }
