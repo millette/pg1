@@ -1,0 +1,38 @@
+{
+  "name": "pg1",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": "cli.js",
+  "repository": "millette/pg1",
+  "author": {
+    "name": "Robin Millette",
+    "email": "robin@millette.info",
+    "url": "http://robin.millette.info"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "lint-staged": {
+    "*.{js,json,md}": ["prettier --fix", "git add"]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "license": "AGPL-3.0",
+  "dependencies": {
+    "dotenv": "^6.1.0",
+    "koa": "^2.6.2",
+    "koa-bodyparser": "^4.2.1",
+    "koa-mount": "^4.0.0",
+    "pg": "^7.6.1",
+    "pg-native": "^3.0.0"
+  },
+  "devDependencies": {
+    "husky": "^1.2.0",
+    "lint-staged": "^8.1.0",
+    "prettier": "^1.15.2"
+  }
+}
