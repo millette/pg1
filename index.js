@@ -1,37 +1,11 @@
 "use strict"
 
 // npm
-require("dotenv").config()
-if (
-  !process.env.SITEVISITOR ||
-  !process.env.SITEVISITORPW ||
-  !process.env.SITECONN
-) {
-  console.error("missing config")
-  process.exit(1)
-}
+require("dotenv-safe").config()
 const Koa = require("koa")
 const mount = require("koa-mount")
 const bodyParser = require("koa-bodyparser")
 const { Pool, Client } = require("pg").native
-
-const visitorPool = new Pool({
-  user: process.env.SITEVISITOR,
-  password: process.env.SITEVISITORPW,
-  connectionString: process.env.SITECONN,
-})
-
-const app = new Koa()
-
-app.use(bodyParser())
-
-app.use(
-  mount("/bo", async (ctx) => {
-    const n = Date.now()
-    const res = await visitorPool.query("SELECT * from table1")
-    ctx.body = `${JSON.stringify(res.rows)} - ${Date.now() - n}`
-  }),
-)
 
 const loginForm = (ctx) => {
   ctx.body = `<form method='post'>
@@ -61,8 +35,19 @@ const loginSubmit = async (ctx) => {
   }
 }
 
+const visitorPool = new Pool({
+  user: process.env.SITEVISITOR,
+  password: process.env.SITEVISITORPW,
+  connectionString: process.env.SITECONN,
+})
+
+const app = new Koa()
+
+app.use(bodyParser())
+
 app.use(
-  mount("/foo", (ctx) => {
+  mount("/login", (ctx) => {
+    ctx.type = "text/html"
     switch (ctx.method) {
       case "GET":
         return loginForm(ctx)
@@ -70,6 +55,20 @@ app.use(
         return loginSubmit(ctx)
     }
     ctx.body = `Method ${ctx.method} not supported.`
+  }),
+)
+
+app.use(
+  mount("/", async (ctx) => {
+    if (ctx.path !== "/") {
+      ctx.status = 404
+      return
+    }
+    const n = Date.now()
+    const res = await visitorPool.query("SELECT * from table1")
+    ctx.type = "text/html"
+    ctx.body = `${JSON.stringify(res.rows)} - ${Date.now() -
+      n}; <a href='/login'>login</a>`
   }),
 )
 
