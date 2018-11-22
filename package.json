@@ -10,11 +10,17 @@
     "email": "robin@millette.info",
     "url": "http://robin.millette.info"
   },
+  "engines": {
+    "node": ">= 10.13.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "lint-staged": {
-    "*.{js,json,md}": ["prettier --fix", "git add"]
+    "*.{js,json,md}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "husky": {
     "hooks": {
