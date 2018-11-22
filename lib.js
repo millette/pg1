@@ -19,7 +19,8 @@ const loginSubmit = async (ctx) => {
   try {
     const n = Date.now()
     const client = new Client({
-      ...ctx.request.body,
+      user: ctx.request.body.user,
+      password: ctx.request.body.password,
       connectionString: process.env.SITECONN,
     })
     await client.connect()
@@ -54,7 +55,6 @@ const front = async (ctx) => {
     case "/":
       try {
         const n = Date.now()
-
         const res = await ctx.visitorPool.query("SELECT * from table1")
         ctx.body = `
           ${JSON.stringify(res.rows)} -
