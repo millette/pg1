@@ -1,5 +1,7 @@
 "use strict"
 
-const pg1 = require(".")
+const checkPool = require(".")
 
-pg1.listen(3000)
+checkPool()
+  .then((app) => app.listen(3000))
+  .catch(console.error)
